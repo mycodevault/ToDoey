@@ -12,9 +12,14 @@ class ToDoListViewController: UITableViewController {
 
     
     var itemArray = ["westworld","game of thrones","billions"]
+    let permanentMemory = UserDefaults.standard
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        if let items = permanentMemory.array(forKey: "storedItemArray") as? [String] {
+            itemArray = items
+        }
     }
 
     //MARK:- Tableview DataSource Methods
@@ -65,8 +70,10 @@ class ToDoListViewController: UITableViewController {
         
         let alertButton = UIAlertAction(title: "Add item", style: .default){ (alertButton) in
             
-            //what will happen after user clicks add item in the uialert
+        //what will happen after user clicks add item in the uialert
+          
         self.itemArray.append(textFieldInput.text!)
+        self.permanentMemory.set(self.itemArray, forKey: "storedItemArray")
         self.tableView.reloadData()
         
         }
@@ -74,8 +81,6 @@ class ToDoListViewController: UITableViewController {
         alertVC.addTextField { (alertTextField) in
             alertTextField.placeholder = "create new item"
             textFieldInput = alertTextField
-          
-       
         }
         
         alertVC.addAction(alertButton)
